@@ -1,45 +1,40 @@
 
+ 
 
 
 const $form = document.querySelector('[data-form]')
 
+
  $form.addEventListener('submit',formSend )
 
- async function formSend (e) {
-e.preventDefault()
+ async function formSend (e) { 
+   e.preventDefault()
+   const formDate = new FormData($form)
+         
+   let error = formValidate($form)
+   
+         
+         if(error===0){
 
-let error = formValidate($form)
-const formDate = new formDate($form)
-if(error===0){
-   response = await fetch('',
-    {method: 'POST',
-   body:'formDate'
-   } )
-   if(response.ok){
-      let result = await response.json()
-      alert(result.message)
-      $form.reset()
+         respons(formDate)
+        
 
-   }
-   else{'Ошибка'
-
-   }
-
+            $form.reset()
+         }   
+         else {alert ('Заполните поля')}
+   
 }
-else{alert('Заполните обязательные поля !')
-}
- }
 
  function formValidate(){
   
     let error = 0
     let $formReq = document.querySelectorAll('.req')
     
-    for(let index = 0; index<$formReq.length;index++){
-      const input =  $formReq[index]
+    $formReq.forEach ((input)=>{
+      
       
       funcRemoveError(input)
-      if(input.classList.contains('tel')){
+      if(input.classList.contains('phone')){
         
          if(telTest(input)){
             funcAddError(input)
@@ -52,8 +47,9 @@ else{alert('Заполните обязательные поля !')
             error++
 
           }
-    }
- }
+      }
+   })
+   return error
 }
  function funcAddError(input){
 input.classList.add('error')
@@ -67,6 +63,39 @@ input.classList.add('error')
  function nameTest(input){
    return !/\b\D{2,10}\b/i.test(input.value)
  }
- const randomId = function(length = 6) {
-   return Math.random().toString(36).substring(2, length+2);
- };
+
+
+ async function respons (formDate) {
+   const responseEnd = []
+   const FormDateObj = Object.fromEntries(formDate)
+
+   let idRandom = function() {
+
+      return Math.random().toString(36).substring(2)
+    }
+    let id={}
+     id.id=idRandom()
+    
+    
+    let res =  await  fetch ('https://api.db-ip.com/v2/free/self')
+        let data = await  res.json()
+   
+ responseEnd.splice(-1,0,id,{name:FormDateObj.name},{phone:FormDateObj.phone},{ip:data.ipAddress},{iso:data.countryCode})
+     console.log(responseEnd)
+
+//    const fetchRespons = await fetch('',
+//    {method: 'POST',
+//    body:'formDate'
+//    } )
+//    if (!response.ok){
+//    let result = await response.json()
+//    alert(result.message)
+   
+
+//    }
+//    else{alert('Ошибка')
+
+//    }
+
+// 
+}
